@@ -11,6 +11,7 @@ import pl.skorpjdk.walletproject.wallet.Wallet;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -33,21 +34,25 @@ public class User implements UserDetails {
     )
     private Long id;
     private String username;
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
     private Boolean locked = false;
     private Boolean enabled = false;
-    private Instant created;
+    private LocalDateTime created;
     @ManyToMany
     @JoinTable(name = "users_wallet",
             joinColumns = @JoinColumn(name = "wallet_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
     private List<Wallet> wallets;
 
-    public User(String username, String email, String password, UserRole userRole, Instant created) {
+    public User(String username,String firstName, String lastName, String email, String password, UserRole userRole, LocalDateTime created) {
         this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.userRole = userRole;
@@ -58,6 +63,22 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRole.name());
         return Collections.singleton(authority);
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public UserRole getUserRole() {
+        return userRole;
     }
 
     @Override
