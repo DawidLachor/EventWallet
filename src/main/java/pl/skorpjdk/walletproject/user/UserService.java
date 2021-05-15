@@ -10,6 +10,7 @@ import pl.skorpjdk.walletproject.registration.token.ConfirmationToken;
 import pl.skorpjdk.walletproject.registration.token.ConfirmationTokenService;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -27,9 +28,11 @@ public class UserService implements UserDetailsService {
     }
 
     public String singUpUser(User user) {
-        boolean emailExist = userRepository.findByEmail(user.getEmail()).isPresent();
-        if (emailExist)
-            throw new IllegalStateException(String.format("Email %s exist in database",user.getEmail()));
+        Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
+        if (userOptional.isPresent()) {
+            if(userOptional.get().getEnabled())
+                throw new IllegalStateException(String.format("Email %s exist in database", user.getEmail()));
+        }
         
         String encodePassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodePassword);
