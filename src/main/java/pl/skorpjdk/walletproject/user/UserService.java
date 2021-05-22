@@ -56,9 +56,8 @@ public class UserService {
     }
 
     public User getCurrentUser(){
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.
-                getContext().getAuthentication().getPrincipal();
-        return userRepository.findByUsername(principal.getUsername()).orElseThrow(() -> new UsernameNotFoundException("User don't found by username"));
+        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+        return userRepository.findByUsername(loggedInUser.getName()).orElseThrow(() -> new UsernameNotFoundException("User don't found by username"));
     }
 
     private boolean checkEnabled(LoginRequest loginRequest) {

@@ -36,13 +36,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(new JwtTokenVerifier(secretKey, userService), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                    .antMatchers("/api/login").permitAll()
-                    .antMatchers("/api/auth/**").permitAll()
+                    .antMatchers("/api/login", "/api/registration/**","/api/registration", "/api/person/**").permitAll()
                     .antMatchers("/api/wallet").authenticated()
-                    .antMatchers("/api/wallet/**").permitAll()
-                    .antMatchers("/api/person/**").permitAll();
+                .and()
+                .addFilterBefore(new JwtTokenVerifier(secretKey, userService), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
