@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/person/{id_person}/costs")
+@RequestMapping("/api/{id_person}/costs")
 @AllArgsConstructor
 public class CostController {
     private final CostService costService;

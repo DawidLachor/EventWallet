@@ -7,7 +7,7 @@ import pl.skorpjdk.walletproject.cost.CostService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/person")
+@RequestMapping("/api/{id_wallet}/person")
 @AllArgsConstructor
 public class PersonController {
     private final PersonService personService;
@@ -18,13 +18,13 @@ public class PersonController {
         return personService.findByIdReturnPersonDto(id);
     }
 
-    @GetMapping("/{id}/person")
-    public List<PersonDto> findAllListPersonById(@PathVariable("id") Long id){
+    @GetMapping()
+    public List<PersonDto> findAllListPersonById(@PathVariable("id_wallet") Long id){
         return personService.findAllById(id);
     }
 
-    @PostMapping("/{id}/person")
-    public PersonDto findAllListPersonById(@RequestBody PersonDto personDto, @PathVariable Long id){
+    @PostMapping()
+    public PersonDto findAllListPersonById(@RequestBody PersonDto personDto, @PathVariable("id_wallet") Long id){
         return personService.createNewPerson(id, personDto);
     }
 }
