@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.skorpjdk.walletproject.person.Person;
 import pl.skorpjdk.walletproject.person.PersonService;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,27 @@ public class CostService {
         }
         return costList;
     }
+
+//    public List<SummaryCost> summaryCosts(Long idWallet){
+//
+//        List<CostDto> allCostByWallet = findAllCostByWallet(idWallet);
+//        BigDecimal sumCost = new BigDecimal(0);
+//        for (CostDto costDto: allCostByWallet){
+//            sumCost = sumCost.add(BigDecimal.valueOf(costDto.getCost()));
+//        }
+//
+//        List<Person> allPersonByWallet = personService.findAllByIdWallet(idWallet);
+//        List<SummaryCost> summaryCosts = new ArrayList<>();
+//        for(Person person: allPersonByWallet){
+//            BigDecimal sumPerson = new BigDecimal(0);
+//            List<CostDto> allCostByPerson = findAllCostByPerson(person.getId());
+//            for (CostDto costDto: allCostByPerson){
+//                sumPerson = sumPerson.add(BigDecimal.valueOf(costDto.getCost()));
+//            }
+//            summaryCosts.add(new SummaryCost(person.getName(), ))
+//
+//        }
+//    }
 
     public List<CostDto> findAllCostByPerson(Long id) {
         Person person = personService.findPersonById(id);
@@ -53,6 +75,16 @@ public class CostService {
         return costDto;
     }
 
+    public void updateCost( CostDto costDto, long idPerson) {
+        Person person = personService.findPersonById(idPerson);
+        Cost cost = findCostById(costDto);
+        cost.setDescription(costDto.getDescription());
+        cost.setCost(costDto.getCost());
+        cost.setName(costDto.getName());
+        cost.setPerson(person);
+        costRepository.save(cost);
+    }
+
     private CostDto mappingToCostDto(Cost cost){
         CostDto costDto = new CostDto();
         costDto.setName(cost.getName());
@@ -69,5 +101,9 @@ public class CostService {
         cost.setDescription(costDto.getDescription());
         cost.setCost(costDto.getCost());
         return cost;
+    }
+
+    public  Cost findCostById(CostDto costDto){
+        return costRepository.findById(costDto.getId()).orElseThrow(() -> new IllegalStateException(String.format("Cost by id %s don't find", costDto.getId())));
     }
 }

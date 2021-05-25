@@ -11,6 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/wallet")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200",allowedHeaders = "*",methods = {RequestMethod.OPTIONS,RequestMethod.GET,RequestMethod.POST,RequestMethod.DELETE,RequestMethod.PUT},maxAge = 3600L,allowCredentials = "true"  )
 public class WalletController {
 
     private final WalletService walletService;

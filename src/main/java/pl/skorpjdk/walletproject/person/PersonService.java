@@ -34,14 +34,16 @@ public class PersonService {
         return personList;
     }
 
+
+
     public List<PersonDto> findAllByIdWalletMappingPersonDto(Long idWallet){
         return findAllByIdWallet(idWallet).stream()
                 .map(this::mappingToPersonDto)
                 .collect(Collectors.toList());
     }
 
-    public PersonDto createNewPerson(Long id, PersonDto personDto) {
-        Wallet walletById = walletService.findWalletById(id);
+    public PersonDto createNewPerson(Long idWallet, PersonDto personDto) {
+        Wallet walletById = walletService.findWalletById(idWallet);
         Person person = mappingToPerson(personDto, walletById);
         List<Person> persons = walletById.getPersons();
         persons.add(person);
