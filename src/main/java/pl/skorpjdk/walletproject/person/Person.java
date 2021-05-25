@@ -19,6 +19,6 @@ public class Person {
     private String name;
     @ManyToOne
     private Wallet wallet;
-    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "person", cascade = CascadeType.PERSIST)
     private List<Cost> cost;
 }

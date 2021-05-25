@@ -13,7 +13,6 @@ public class Cost {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @Lob
     private String description;
     private Instant dateOfPay;
     private double cost;

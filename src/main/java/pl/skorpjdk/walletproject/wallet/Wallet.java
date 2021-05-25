@@ -19,7 +19,7 @@ public class Wallet {
     private String name;
     private String description;
     private Boolean enable;
-    @OneToMany(mappedBy = "wallet", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "wallet", cascade = CascadeType.PERSIST)
     private List<Person> persons;
     @ManyToMany
     @JoinTable(name = "users_wallet",
