@@ -14,7 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @Component
 public class MappingWallet {
-    private final PersonRepository personRepository;
     private final UserService userService;
 
     public Wallet mappingWallet(WalletDto walletDto) {
@@ -40,17 +39,6 @@ public class MappingWallet {
         walletDto.setId(wallet.getId());
         walletDto.setName(wallet.getName());
         walletDto.setDescription(wallet.getDescription());
-        List<String> people = getNamePerson(wallet.getPersons());
-        walletDto.setPeople(people);
         return walletDto;
-    }
-
-    private List<String> getNamePerson(List<Person> people){
-        List<String> namePeople = new ArrayList<>();
-        for (Person p: people){
-            Person person = personRepository.findById(p.getId()).orElseThrow(() -> new IllegalStateException(String.format("User not found by id: %s", p.getId())));
-            namePeople.add(person.getName());
-        }
-        return namePeople;
     }
 }

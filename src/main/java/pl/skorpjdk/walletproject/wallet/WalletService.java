@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 public class WalletService {
     private final WalletRepository walletRepository;
     private final MappingWallet mappingWallet;
+    private final UserService userService;
 
     public void create(WalletDto walletDto) {
         Wallet wallet = mappingWallet.mappingWallet(walletDto);
@@ -24,7 +25,8 @@ public class WalletService {
     }
 
     public List<WalletDto> findAll() {
-        return walletRepository.findAll().stream()
+        User user = userService.getCurrentUser();
+        return walletRepository.findAllByUsers(user).stream()
                 .map(mappingWallet::toWalletDto)
                 .collect(Collectors.toList());
     }
@@ -35,5 +37,12 @@ public class WalletService {
 
     public Wallet findWalletById(Long id){
         return walletRepository.findById(id).orElseThrow(() -> new IllegalStateException(String.format("Not found wallet by id: %s",id)));
+    }
+
+    public void update(WalletDto walletDto) {
+        Wallet wallet = findWalletById(walletDto.getId());
+        wallet.setName(walletDto.getName());
+        wallet.setDescription(walletDto.getDescription());
+        walletRepository.save(wallet);
     }
 }

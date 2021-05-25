@@ -60,6 +60,10 @@ public class UserService {
         return userRepository.findByUsername(loggedInUser.getName()).orElseThrow(() -> new UsernameNotFoundException("User don't found by username"));
     }
 
+    public User findByUsername(String username){
+        return userRepository.findByUsername(username).orElseThrow(() -> new IllegalStateException("Username exist in database"));
+    }
+
     private boolean checkEnabled(LoginRequest loginRequest) {
         User user = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow(() -> new IllegalStateException("Username exist in database"));
         return user.getEnabled();

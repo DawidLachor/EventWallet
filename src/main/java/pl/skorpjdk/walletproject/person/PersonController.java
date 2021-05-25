@@ -20,7 +20,7 @@ public class PersonController {
 
     @GetMapping()
     public List<PersonDto> findAllListPersonById(@PathVariable("id_wallet") Long id){
-        return personService.findAllById(id);
+        return personService.findAllByIdWalletMappingPersonDto(id);
     }
 
     @PostMapping()

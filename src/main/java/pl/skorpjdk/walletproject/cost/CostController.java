@@ -13,7 +13,7 @@ public class CostController {
 
     @GetMapping()
     public List<CostDto> findAllCostByPersonId(@PathVariable("id_person") Long id){
-        return costService.findAllCostByPerson(id);
+        return costService.findAllCostByWallet(id);
     }
 
     @PostMapping()

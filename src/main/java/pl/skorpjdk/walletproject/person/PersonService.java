@@ -24,14 +24,18 @@ public class PersonService {
         return mappingToPersonDto(person);
     }
 
-    public List<PersonDto> findAllById(Long id) {
-        Wallet wallet = walletService.findWalletById(id);
+    public List<Person> findAllByIdWallet(Long idWallet) {
+        Wallet wallet = walletService.findWalletById(idWallet);
         List<Person> personList = new ArrayList<>();
         for (Person p: wallet.getPersons()){
             Person person = personRepository.findById(p.getId()).orElseThrow(() -> new IllegalStateException(String.format("User not found by id: %d", p.getId())));
             personList.add(person);
         }
-        return personList.stream()
+        return personList;
+    }
+
+    public List<PersonDto> findAllByIdWalletMappingPersonDto(Long idWallet){
+        return findAllByIdWallet(idWallet).stream()
                 .map(this::mappingToPersonDto)
                 .collect(Collectors.toList());
     }

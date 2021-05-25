@@ -1,6 +1,6 @@
 package pl.skorpjdk.walletproject.person;
 
-import lombok.Data;
+import lombok.*;
 import pl.skorpjdk.walletproject.cost.Cost;
 import pl.skorpjdk.walletproject.wallet.Wallet;
 
@@ -8,7 +8,10 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

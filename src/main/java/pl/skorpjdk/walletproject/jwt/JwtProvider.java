@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import pl.skorpjdk.walletproject.user.UserService;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
@@ -19,6 +20,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class JwtProvider {
     private final SecretKey secretKey;
+
 
     public String generateToken(Authentication authenticate) {
         User principal = (User) authenticate.getPrincipal();

@@ -30,4 +30,9 @@ public class WalletController {
     public WalletDto allWallet(@PathVariable Long id){
         return walletService.findById(id);
     }
+
+    @PutMapping
+    public void updateWallet(@RequestBody WalletDto walletDto){
+        walletService.update(walletDto);
+    }
 }

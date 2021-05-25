@@ -9,5 +9,4 @@ public class WalletDto {
     private Long id;
     private String name;
     private String description;
-    private List<String> people;
 }

@@ -8,6 +8,7 @@ import pl.skorpjdk.walletproject.person.PersonService;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -16,10 +17,26 @@ public class CostService {
     private final CostRepository costRepository;
     private final PersonService personService;
 
+    public List<CostDto> findAllCostByWallet(Long idWallet){
+        List<Person> persons = personService.findAllByIdWallet(idWallet);
+        List<CostDto> costList = new ArrayList<>();
+        for (Person person: persons){
+            List<Cost> cost = person.getCost();
+            costList.addAll(createListCostDto(cost));
+        }
+        return costList;
+    }
+
     public List<CostDto> findAllCostByPerson(Long id) {
         Person person = personService.findPersonById(id);
-        List<CostDto> costDtoList = new ArrayList<>();
+        List<CostDto> costDtoList;
         List<Cost> cost = person.getCost();
+        costDtoList = createListCostDto(cost);
+        return costDtoList;
+    }
+
+    private List<CostDto> createListCostDto(List<Cost> cost) {
+        List<CostDto> costDtoList = new ArrayList<>();
         for (Cost c: cost){
             Cost costRepo = costRepository.findById(c.getId()).orElseThrow(() -> new IllegalStateException(String.format("Cost by id %s don't find", c.getId())));
             costDtoList.add(mappingToCostDto(costRepo));
