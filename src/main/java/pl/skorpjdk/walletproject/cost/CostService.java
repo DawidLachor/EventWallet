@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.skorpjdk.walletproject.person.Person;
 import pl.skorpjdk.walletproject.person.PersonService;
+import pl.skorpjdk.walletproject.summary.SummaryCost;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -28,41 +29,11 @@ public class CostService {
         return costList;
     }
 
-//    public List<SummaryCost> summaryCosts(Long idWallet){
-//
-//        List<CostDto> allCostByWallet = findAllCostByWallet(idWallet);
-//        BigDecimal sumCost = new BigDecimal(0);
-//        for (CostDto costDto: allCostByWallet){
-//            sumCost = sumCost.add(BigDecimal.valueOf(costDto.getCost()));
-//        }
-//
-//        List<Person> allPersonByWallet = personService.findAllByIdWallet(idWallet);
-//        List<SummaryCost> summaryCosts = new ArrayList<>();
-//        for(Person person: allPersonByWallet){
-//            BigDecimal sumPerson = new BigDecimal(0);
-//            List<CostDto> allCostByPerson = findAllCostByPerson(person.getId());
-//            for (CostDto costDto: allCostByPerson){
-//                sumPerson = sumPerson.add(BigDecimal.valueOf(costDto.getCost()));
-//            }
-//            summaryCosts.add(new SummaryCost(person.getName(), ))
-//
-//        }
-//    }
-
     public List<CostDto> findAllCostByPerson(Long id) {
         Person person = personService.findPersonById(id);
         List<CostDto> costDtoList;
         List<Cost> cost = person.getCost();
         costDtoList = createListCostDto(cost);
-        return costDtoList;
-    }
-
-    private List<CostDto> createListCostDto(List<Cost> cost) {
-        List<CostDto> costDtoList = new ArrayList<>();
-        for (Cost c: cost){
-            Cost costRepo = costRepository.findById(c.getId()).orElseThrow(() -> new IllegalStateException(String.format("Cost by id %s don't find", c.getId())));
-            costDtoList.add(mappingToCostDto(costRepo));
-        }
         return costDtoList;
     }
 
@@ -85,6 +56,19 @@ public class CostService {
         costRepository.save(cost);
     }
 
+    public  Cost findCostById(CostDto costDto){
+        return costRepository.findById(costDto.getId()).orElseThrow(() -> new IllegalStateException(String.format("Cost by id %s don't find", costDto.getId())));
+    }
+
+    private List<CostDto> createListCostDto(List<Cost> cost) {
+        List<CostDto> costDtoList = new ArrayList<>();
+        for (Cost c: cost){
+            Cost costRepo = costRepository.findById(c.getId()).orElseThrow(() -> new IllegalStateException(String.format("Cost by id %s don't find", c.getId())));
+            costDtoList.add(mappingToCostDto(costRepo));
+        }
+        return costDtoList;
+    }
+
     private CostDto mappingToCostDto(Cost cost){
         CostDto costDto = new CostDto();
         costDto.setName(cost.getName());
@@ -101,9 +85,5 @@ public class CostService {
         cost.setDescription(costDto.getDescription());
         cost.setCost(costDto.getCost());
         return cost;
-    }
-
-    public  Cost findCostById(CostDto costDto){
-        return costRepository.findById(costDto.getId()).orElseThrow(() -> new IllegalStateException(String.format("Cost by id %s don't find", costDto.getId())));
     }
 }

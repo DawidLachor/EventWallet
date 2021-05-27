@@ -1,4 +1,4 @@
-package pl.skorpjdk.walletproject.cost;
+package pl.skorpjdk.walletproject.summary;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
