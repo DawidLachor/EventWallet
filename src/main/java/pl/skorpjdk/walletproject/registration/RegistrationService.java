@@ -23,11 +23,23 @@ public class RegistrationService {
 
     public String register(RegistrationRequest request) {
         boolean isEmailValid = emailValidator.test(request.getEmail());
+        boolean isUsernameIsUsed = checkUsername(request);
         if (!isEmailValid)
             throw new IllegalArgumentException(String.format("Email not valid %s", request.getEmail()));
+        if (isUsernameIsUsed)
+            throw new IllegalStateException(String.format("This username: %s is exist", request.getUsername()));
         String token = createUser(request);
         sendVerificationEmail(request, token);
         return token;
+    }
+
+    private boolean checkUsername(RegistrationRequest request) {
+        try {
+            userService.findByUsername(request.getUsername());
+        } catch(Exception e){
+            return false;
+        }
+        return true;
     }
 
     public String confirmToken(String token) {

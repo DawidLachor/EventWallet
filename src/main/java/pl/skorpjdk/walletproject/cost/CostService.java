@@ -3,6 +3,7 @@ package pl.skorpjdk.walletproject.cost;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.skorpjdk.walletproject.person.Person;
+import pl.skorpjdk.walletproject.person.PersonDto;
 import pl.skorpjdk.walletproject.person.PersonService;
 import pl.skorpjdk.walletproject.summary.SummaryCost;
 
@@ -85,5 +86,11 @@ public class CostService {
         cost.setDescription(costDto.getDescription());
         cost.setCost(costDto.getCost());
         return cost;
+    }
+
+    public PersonDto findPersonByCost(Long costId) {
+        Cost cost = costRepository.findById(costId).orElseThrow(() -> new IllegalStateException(String.format("Not found cost by id: %s", costId)));
+        Person person = cost.getPerson();
+        return personService.findByIdReturnPersonDto(person.getId());
     }
 }

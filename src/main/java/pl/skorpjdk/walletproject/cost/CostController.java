@@ -2,6 +2,7 @@ package pl.skorpjdk.walletproject.cost;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import pl.skorpjdk.walletproject.person.PersonDto;
 
 import java.util.List;
 
@@ -25,5 +26,10 @@ public class CostController {
     @PutMapping("/{id_person}")
     public void updateCost(@RequestBody CostDto costDto, @PathVariable("id_person") long idPerson){
         costService.updateCost(costDto, idPerson);
+    }
+
+    @GetMapping("/{id_cost}")
+    public PersonDto findPersonByIdCost(@PathVariable("id_cost") Long costId){
+        return costService.findPersonByCost(costId);
     }
 }
