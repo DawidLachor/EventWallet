@@ -45,4 +45,9 @@ public class WalletService {
         wallet.setDescription(walletDto.getDescription());
         walletRepository.save(wallet);
     }
+
+    public void delete(Long id) {
+        Wallet wallet = findWalletById(id);
+        walletRepository.delete(wallet);
+    }
 }

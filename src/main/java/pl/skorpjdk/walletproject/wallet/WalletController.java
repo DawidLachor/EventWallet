@@ -35,4 +35,9 @@ public class WalletController {
     public void updateWallet(@RequestBody WalletDto walletDto){
         walletService.update(walletDto);
     }
+
+    @DeleteMapping("/{id}")
+    public void updateWallet(@PathVariable Long id){
+        walletService.delete(id);
+    }
 }

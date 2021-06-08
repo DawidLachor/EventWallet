@@ -36,6 +36,8 @@ public class SummaryService {
         return sum;
     }
 
+    
+
     private List<SummaryCost> createSummaryList(BigDecimal sumCost, List<Person> allPersonByWallet) {
         List<SummaryCost> summaryCosts = new ArrayList<>();
         sumCost = sumCost.divide(BigDecimal.valueOf(allPersonByWallet.size()), 2, RoundingMode.HALF_UP);
@@ -43,7 +45,7 @@ public class SummaryService {
             List<CostDto> allCostByPerson = costService.findAllCostByPerson(person.getId());
             BigDecimal sumPerson = getSumCost(allCostByPerson);
             sumPerson = sumPerson.subtract(sumCost);
-            summaryCosts.add(new SummaryCost(person.getName(), sumPerson.doubleValue()));
+            summaryCosts.add(new SummaryCost(person.getId(), person.getName(), sumPerson.doubleValue()));
         }
         return summaryCosts;
     }

@@ -32,4 +32,9 @@ public class CostController {
     public PersonDto findPersonByIdCost(@PathVariable("id_cost") Long costId){
         return costService.findPersonByCost(costId);
     }
+
+    @DeleteMapping("/{id_cost}")
+    public void delete(@PathVariable("id_cost") Long costId){
+        costService.delete(costId);
+    }
 }

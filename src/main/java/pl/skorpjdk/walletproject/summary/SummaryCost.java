@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SummaryCost {
-    public String name;
-    public double cost;
+    private long id;
+    private String name;
+    private double cost;
 }

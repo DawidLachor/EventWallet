@@ -93,4 +93,9 @@ public class CostService {
         Person person = cost.getPerson();
         return personService.findByIdReturnPersonDto(person.getId());
     }
+
+    public void delete(Long costId) {
+        Cost cost = costRepository.findById(costId).orElseThrow(() -> new IllegalStateException(String.format("Not found cost by id: %s", costId)));
+        costRepository.delete(cost);
+    }
 }
