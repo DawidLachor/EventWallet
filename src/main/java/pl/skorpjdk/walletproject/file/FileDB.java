@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import pl.skorpjdk.walletproject.cost.Cost;
 
 import javax.persistence.*;
@@ -21,6 +22,8 @@ public class FileDB {
     private String id;
     private String name;
     private String type;
+    @Lob
+    @Type(type = "org.hibernate.type.ImageType")
     private byte[] data;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinTable(name = "file_cost",
@@ -33,5 +36,12 @@ public class FileDB {
         this.name = name;
         this.type = type;
         this.data = data;
+    }
+
+    public FileDB(String name, String type, byte[] data, Cost cost) {
+        this.name = name;
+        this.type = type;
+        this.data = data;
+        this.cost = cost;
     }
 }

@@ -14,15 +14,15 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Controller
-@RequestMapping("")
+@RequestMapping("/api/{id_cost}")
 public class FileController {
     private FileService storageService;
 
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @PathVariable("id_cost") Long idCost) {
         String message = "";
         try {
-            storageService.store(file);
+            storageService.store(file, idCost);
 
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
@@ -32,12 +32,13 @@ public class FileController {
         }
     }
 
+
     @GetMapping("/files")
-    public ResponseEntity<List<ResponseFile>> getListFiles() {
-        List<ResponseFile> files = storageService.getAllFiles().map(dbFile -> {
+    public ResponseEntity<List<ResponseFile>> getListFilesByCost(@PathVariable Long id_cost) {
+        List<ResponseFile> files = storageService.getAllFilesByCostId(id_cost).map(dbFile -> {
             String fileDownloadUri = ServletUriComponentsBuilder
                     .fromCurrentContextPath()
-                    .path("/files/")
+                    .path("api/1/files/")
                     .path(dbFile.getId())
                     .toUriString();
 

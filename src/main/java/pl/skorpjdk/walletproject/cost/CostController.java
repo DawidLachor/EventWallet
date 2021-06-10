@@ -2,6 +2,7 @@ package pl.skorpjdk.walletproject.cost;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pl.skorpjdk.walletproject.person.PersonDto;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class CostController {
     private final CostService costService;
 
     @GetMapping()
-    public List<CostDto> findAllCostByPersonId(@PathVariable("id_wallet") Long id){
+    public List<CostDto> findAllCostByWalletId(@PathVariable("id_wallet") Long id){
         return costService.findAllCostByWallet(id);
     }
 
