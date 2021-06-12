@@ -14,15 +14,15 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Controller
-@RequestMapping("/api/{id_cost}")
+@RequestMapping("/api")
 public class FileController {
     private FileService storageService;
 
-    @PostMapping("/upload")
+    @PostMapping("/{id_cost}/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @PathVariable("id_cost") Long idCost) {
         String message = "";
         try {
-            storageService.store(file, idCost);
+            storageService.update(file, idCost);
 
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
@@ -32,13 +32,27 @@ public class FileController {
         }
     }
 
+    @PostMapping("/files")
+    public ResponseEntity<?> createFile(@RequestParam("file") MultipartFile file) {
+        String message = "";
+        try {
+            String idFile = storageService.createFile(file);
 
-    @GetMapping("/files")
+            message = "Uploaded the file successfully: " + file.getOriginalFilename();
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(idFile, message));
+        } catch (Exception e) {
+            message = "Could not upload the file: " + file.getOriginalFilename() + "!";
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+        }
+    }
+
+
+    @GetMapping("/{id_cost}/files")
     public ResponseEntity<List<ResponseFile>> getListFilesByCost(@PathVariable Long id_cost) {
         List<ResponseFile> files = storageService.getAllFilesByCostId(id_cost).map(dbFile -> {
             String fileDownloadUri = ServletUriComponentsBuilder
                     .fromCurrentContextPath()
-                    .path("api/1/files/")
+                    .path("api/files/")
                     .path(dbFile.getId())
                     .toUriString();
 
@@ -59,6 +73,11 @@ public class FileController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getName() + "\"")
                 .body(fileDB.getData());
+    }
+
+    @GetMapping("/{id_cost}/files/{id_file}")
+    public void getFile(@PathVariable("id_file") String idFile, @PathVariable("id_cost") Long idCost) {
+        storageService.connection(idFile, idCost);
     }
 }
 

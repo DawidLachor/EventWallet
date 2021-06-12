@@ -44,7 +44,8 @@ public class CostService {
         Cost cost = mappingToCost(costDto);
         cost.setDateOfPay(Instant.now());
         cost.setPerson(person);
-        costRepository.save(cost);
+        Cost save = costRepository.save(cost);
+        costDto.setId(save.getId());
         return costDto;
     }
 
