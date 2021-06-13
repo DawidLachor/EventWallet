@@ -15,15 +15,18 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final WalletService walletService;
 
+    //Wyszukiwanie osoby po id
     public Person findPersonById(Long id){
         return personRepository.findById(id).orElseThrow(() -> new IllegalStateException(String.format("Not found the person about id: %s", id)));
     }
 
+    //Wyszukiwanie osoby od html po id
     public PersonDto findByIdReturnPersonDto(Long id) {
         Person person = findPersonById(id);
         return mappingToPersonDto(person);
     }
 
+    //Wyszukiwanie listy osób po id portferze
     public List<Person> findAllByIdWallet(Long idWallet) {
         Wallet wallet = walletService.findWalletById(idWallet);
         List<Person> personList = new ArrayList<>();
@@ -34,14 +37,14 @@ public class PersonService {
         return personList;
     }
 
-
-
+    //Zwracanie listy osób do html po id
     public List<PersonDto> findAllByIdWalletMappingPersonDto(Long idWallet){
         return findAllByIdWallet(idWallet).stream()
                 .map(this::mappingToPersonDto)
                 .collect(Collectors.toList());
     }
 
+    //Tworznie nowej osoby
     public PersonDto createNewPerson(Long idWallet, PersonDto personDto) {
         Wallet walletById = walletService.findWalletById(idWallet);
         Person person = mappingToPerson(personDto, walletById);
@@ -63,5 +66,9 @@ public class PersonService {
         person.setName(personDto.getName());
         person.setWallet(wallet);
         return person;
+    }
+
+    public void save(Person person) {
+        personRepository.save(person);
     }
 }

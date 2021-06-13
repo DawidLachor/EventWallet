@@ -17,12 +17,15 @@ public class FileService {
     private final FileRepository fileDBRepository;
     private final CostRepository costRepository;
 
-    public FileDB update(MultipartFile file, Long costId) throws IOException {
+    //dodawanie zdjęć kiedy jest utworzony koszt
+    public void update(MultipartFile file, Long costId) throws IOException {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        //Wyszukanie kosztu
         Cost cost = costRepository.findById(costId).orElseThrow(() -> new IllegalStateException("No found cost"));
+        //Dodanie zdjęcia i połaczenie kosztu
         FileDB FileDB = new FileDB(fileName, file.getContentType(), file.getBytes(), cost);
 
-        return fileDBRepository.save(FileDB);
+        fileDBRepository.save(FileDB);
     }
 
     public FileDB getFile(String id) {
@@ -45,6 +48,7 @@ public class FileService {
         return saveFile.getId();
     }
 
+    //Połączenie zdjęcia z kosztem
     public void connection(String idFile, Long idCost) {
         Cost cost = costRepository.findById(idCost).orElseThrow(() -> new IllegalStateException("Cost is not exist"));
         FileDB fileDB = fileDBRepository.findById(idFile).orElseThrow(() -> new IllegalStateException("File is not exist"));

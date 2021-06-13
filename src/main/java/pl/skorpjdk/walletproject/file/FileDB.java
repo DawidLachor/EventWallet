@@ -10,6 +10,7 @@ import pl.skorpjdk.walletproject.cost.Cost;
 
 import javax.persistence.*;
 
+//Model bazy danych do zdjęć
 @Entity
 @NoArgsConstructor
 @Getter

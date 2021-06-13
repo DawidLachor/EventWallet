@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.time.Instant;
 
+//Koszt zwracany przez zapytanie html
 @Data
 public class CostDto {
     private Long id;

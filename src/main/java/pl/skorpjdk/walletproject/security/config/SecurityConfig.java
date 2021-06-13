@@ -34,15 +34,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsServiceImpl userService;
     private final SecretKey secretKey;
 
+    //konfiguracja security
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                //ustawienia cors
                 .cors().configurationSource(corsConfigurationSource())
                 .and()
+                //Wyłączenie csrf
                 .csrf().disable()
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                //autoryzacja
                 .authorizeRequests()
                     .antMatchers("/api/login", "/api/registration/**","/api/registration", "/api/person/**").permitAll()
                     .antMatchers("/api/wallet").authenticated()
@@ -61,6 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         managerBuilder.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
     }
 
+    //konfiguracja cors
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();

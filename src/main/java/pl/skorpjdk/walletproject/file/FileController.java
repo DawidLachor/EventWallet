@@ -12,16 +12,19 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//Kontroler do dodawania zdjęć
 @AllArgsConstructor
 @Controller
 @RequestMapping("/api")
 public class FileController {
     private FileService storageService;
 
+    //Modyfikacja istniejących kosztów
     @PostMapping("/{id_cost}/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @PathVariable("id_cost") Long idCost) {
         String message = "";
         try {
+            //Zapisz zdjęć
             storageService.update(file, idCost);
 
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
@@ -32,10 +35,11 @@ public class FileController {
         }
     }
 
+    //Podczas tworzenia kosztów
     @PostMapping("/files")
     public ResponseEntity<?> createFile(@RequestParam("file") MultipartFile file) {
         String message = "";
-        try {
+        try {//Zapisz zdjęć
             String idFile = storageService.createFile(file);
 
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
@@ -46,10 +50,11 @@ public class FileController {
         }
     }
 
-
+    //Wyświetlanie zdjęć
     @GetMapping("/{id_cost}/files")
     public ResponseEntity<List<ResponseFile>> getListFilesByCost(@PathVariable Long id_cost) {
         List<ResponseFile> files = storageService.getAllFilesByCostId(id_cost).map(dbFile -> {
+            //Tworzenie ścieżki pliku
             String fileDownloadUri = ServletUriComponentsBuilder
                     .fromCurrentContextPath()
                     .path("api/files/")
@@ -66,6 +71,7 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.OK).body(files);
     }
 
+    //Wyświetlenie pliku
     @GetMapping("/files/{id}")
     public ResponseEntity<byte[]> getFile(@PathVariable String id) {
         FileDB fileDB = storageService.getFile(id);
@@ -75,6 +81,7 @@ public class FileController {
                 .body(fileDB.getData());
     }
 
+    //Laczenie się z kosztami
     @GetMapping("/{id_cost}/files/{id_file}")
     public void getFile(@PathVariable("id_file") String idFile, @PathVariable("id_cost") Long idCost) {
         storageService.connection(idFile, idCost);

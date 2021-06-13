@@ -22,12 +22,12 @@ public class WalletController {
     }
 
     @GetMapping("/all")
-    public List<WalletDto> allWallet(){
+    public List<WalletDto> findAllWallet(){
         return walletService.findAll();
     }
 
     @GetMapping("/{id}")
-    public WalletDto allWallet(@PathVariable Long id){
+    public WalletDto findWallet(@PathVariable Long id){
         return walletService.findById(id);
     }
 
@@ -37,7 +37,7 @@ public class WalletController {
     }
 
     @DeleteMapping("/{id}")
-    public void updateWallet(@PathVariable Long id){
+    public void deleteWallet(@PathVariable Long id){
         walletService.delete(id);
     }
 }

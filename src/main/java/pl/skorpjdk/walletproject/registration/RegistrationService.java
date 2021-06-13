@@ -21,7 +21,9 @@ public class RegistrationService {
     private final EmailSender emailSender;
     private final ConfirmationTokenService confirmationTokenService;
 
-    public String register(RegistrationRequest request) {
+    //Rejestracja nowego konta
+    public void register(RegistrationRequest request) {
+        //Walidacja email
         boolean isEmailValid = emailValidator.test(request.getEmail());
         boolean isUsernameIsUsed = checkUsername(request);
         if (!isEmailValid)
@@ -30,9 +32,9 @@ public class RegistrationService {
             throw new IllegalStateException(String.format("This username: %s is exist", request.getUsername()));
         String token = createUser(request);
         sendVerificationEmail(request, token);
-        return token;
     }
 
+    //Sprawdzenie czy istnieje użytkownik
     private boolean checkUsername(RegistrationRequest request) {
         try {
             userService.findByUsername(request.getUsername());
@@ -42,6 +44,7 @@ public class RegistrationService {
         return true;
     }
 
+    //Potwierdzenie email
     public String confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService.getToken(token).orElseThrow(() -> new IllegalStateException("Token not found"));
         if (confirmationToken.getConfirmedAt() != null){
@@ -72,11 +75,13 @@ public class RegistrationService {
         );
     }
 
+    //Wysyłanie email podczas rejesstracji
     private void sendVerificationEmail(RegistrationRequest request, String token) {
         String link = "http://localhost:8080/api/registration/confirm?token=" + token;
         emailSender.send(request.getEmail(), buildEmail(request.getFirstName(), link));
     }
 
+    //Treść email
     private String buildEmail(String firstName, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +

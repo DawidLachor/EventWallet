@@ -22,6 +22,7 @@ public class JwtProvider {
     private final SecretKey secretKey;
 
 
+    //Tworzenie tokena JWT
     public String generateToken(Authentication authenticate) {
         User principal = (User) authenticate.getPrincipal();
         return Jwts.builder()

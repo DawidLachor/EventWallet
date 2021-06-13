@@ -7,7 +7,7 @@ import pl.skorpjdk.walletproject.person.Person;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.List;
-
+//Model Bazy danych
 @Entity
 @Data
 public class Cost {

@@ -31,13 +31,15 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
 
+    //Rejestracja użytkownika
     public String singUpUser(User user) {
         Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
         if (userOptional.isPresent()) {
             if(userOptional.get().getEnabled())
                 throw new IllegalStateException(String.format("Email %s exist in database", user.getEmail()));
         }
-        
+
+        //Zakodowanie hasła
         String encodePassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodePassword);
         
@@ -46,15 +48,18 @@ public class UserService {
         return getToken(user);
     }
 
+    //logowanie się na konto
     public AuthenticationResponse login(LoginRequest loginRequest) {
         if (!checkEnabled(loginRequest))
             throw new IllegalStateException("Username don't enable account");
+        //Sprawdzanie poprawności danych
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
         String generateToken = jwtProvider.generateToken(authenticate);
         return new AuthenticationResponse(generateToken, loginRequest.getUsername());
     }
 
+    //zwracanie obecnie zalogowanego użytkownika
     public User getCurrentUser(){
         Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
         return userRepository.findByUsername(loggedInUser.getName()).orElseThrow(() -> new UsernameNotFoundException("User don't found by username"));

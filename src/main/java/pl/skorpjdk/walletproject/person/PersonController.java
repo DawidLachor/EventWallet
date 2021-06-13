@@ -11,20 +11,21 @@ import java.util.List;
 @AllArgsConstructor
 public class PersonController {
     private final PersonService personService;
-    private final CostService costService;
 
-    @GetMapping("{id}")
+    //Wyszukiwaniu osoby op id
+    @GetMapping("/{id}")
     public PersonDto findById(@PathVariable("id") Long id){
         return personService.findByIdReturnPersonDto(id);
     }
 
+    //Wyszukiwanie wszystkich osób po id portfela
     @GetMapping()
-    public List<PersonDto> findAllListPersonById(@PathVariable("id_wallet") Long id){
-        return personService.findAllByIdWalletMappingPersonDto(id);
+    public List<PersonDto> findAllListPersonByIdWallet(@PathVariable("id_wallet") Long idWallet){
+        return personService.findAllByIdWalletMappingPersonDto(idWallet);
     }
 
     @PostMapping()
-    public PersonDto findAllListPersonById(@RequestBody PersonDto personDto, @PathVariable("id_wallet") Long id){
-        return personService.createNewPerson(id, personDto);
+    public PersonDto createPersonWithWallet(@RequestBody PersonDto personDto, @PathVariable("id_wallet") Long idWallet){
+        return personService.createNewPerson(idWallet, personDto);
     }
 }

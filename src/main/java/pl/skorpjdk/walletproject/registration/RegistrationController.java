@@ -12,12 +12,14 @@ public class RegistrationController {
 
     private final RegistrationService registrationService;
 
+    //Rejestracja nowego użytkownika
     @PostMapping
     public ResponseEntity<?> register(@RequestBody RegistrationRequest request) {
         registrationService.register(request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    //Potwierdzenie email
     @GetMapping("/confirm")
     public String confirm(@RequestParam("token") String token){
         return registrationService.confirmToken(token);

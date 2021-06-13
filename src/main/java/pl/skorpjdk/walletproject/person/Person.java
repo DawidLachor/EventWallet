@@ -21,4 +21,5 @@ public class Person {
     private Wallet wallet;
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private List<Cost> cost;
+    private double totalCost;
 }

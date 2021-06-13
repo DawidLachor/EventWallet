@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+//Serwis do wysyłania email
 @Service
 @AllArgsConstructor
 public class EmailService implements EmailSender{
@@ -21,6 +22,7 @@ public class EmailService implements EmailSender{
     @Async
     public void send(String to, String bodyEmail) {
         try{
+            //Ustawienia wiadomości email
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, "utf-8");
             mimeMessageHelper.setText(bodyEmail, true);

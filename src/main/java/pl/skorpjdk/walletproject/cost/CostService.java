@@ -2,14 +2,11 @@ package pl.skorpjdk.walletproject.cost;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import pl.skorpjdk.walletproject.person.Person;
 import pl.skorpjdk.walletproject.person.PersonDto;
 import pl.skorpjdk.walletproject.person.PersonService;
-import pl.skorpjdk.walletproject.summary.SummaryCost;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +18,13 @@ public class CostService {
     private final CostRepository costRepository;
     private final PersonService personService;
 
+    //Wyszukiwanie wszystkich kosztów po id portfela
     public List<CostDto> findAllCostByWallet(Long idWallet){
+        //Wyszukiwanie wszystkich osób z portfela o danym id
         List<Person> persons = personService.findAllByIdWallet(idWallet);
         List<CostDto> costList = new ArrayList<>();
+
+        //Tworzenie listy z wszystkimi kosztami w portfelu
         for (Person person: persons){
             List<Cost> cost = person.getCost();
             costList.addAll(createListCostDto(cost));
@@ -31,6 +32,7 @@ public class CostService {
         return costList;
     }
 
+    //Wyszukiwanie wszystkich kosztów od danej osoby
     public List<CostDto> findAllCostByPerson(Long id) {
         Person person = personService.findPersonById(id);
         List<CostDto> costDtoList;
@@ -39,19 +41,32 @@ public class CostService {
         return costDtoList;
     }
 
-    public CostDto createCost(Long id, CostDto costDto) {
-        Person person = personService.findPersonById(id);
+    //Tworzenie nowego kosztu
+    public CostDto createCost(Long idPerson, CostDto costDto) {
+        //Wyszukiwanie osoby o danym id
+        Person person = personService.findPersonById(idPerson);
+        //Dodawanie całkowitego kosztu do danej osoby
+        person.setTotalCost(person.getTotalCost()+costDto.getCost());
+
+        //Tworzenie kosztu
         Cost cost = mappingToCost(costDto);
         cost.setDateOfPay(Instant.now());
         cost.setPerson(person);
+        //Zapis
         Cost save = costRepository.save(cost);
         costDto.setId(save.getId());
         return costDto;
     }
 
-    public void updateCost( CostDto costDto, long idPerson) {
+    //Modyfikacja kosztów
+    public void updateCost(CostDto costDto, long idPerson) {
+        //Wyszukiwanie osoby o danym id
         Person person = personService.findPersonById(idPerson);
-        Cost cost = findCostById(costDto);
+        //Wyszukiwanie kosztu
+        Cost cost = findCostByCostDto(costDto);
+        //Modyfikacja całkowitej ceny kosztów danej osoby
+        person.setTotalCost((person.getTotalCost() - cost.getCost())+costDto.getCost());
+        //Modyfikacja kosztu
         cost.setDescription(costDto.getDescription());
         cost.setCost(costDto.getCost());
         cost.setName(costDto.getName());
@@ -59,7 +74,7 @@ public class CostService {
         costRepository.save(cost);
     }
 
-    public  Cost findCostById(CostDto costDto){
+    public Cost findCostByCostDto(CostDto costDto){
         return costRepository.findById(costDto.getId()).orElseThrow(() -> new IllegalStateException(String.format("Cost by id %s don't find", costDto.getId())));
     }
 
@@ -71,6 +86,9 @@ public class CostService {
 
     public void delete(Long costId) {
         Cost cost = costRepository.findById(costId).orElseThrow(() -> new IllegalStateException(String.format("Not found cost by id: %s", costId)));
+        Person person = cost.getPerson();
+        //Odjęcie kosztu z całkowitej kwoty
+        person.setTotalCost(BigDecimal.valueOf(person.getTotalCost()).subtract(BigDecimal.valueOf(cost.getCost())).doubleValue());
         costRepository.delete(cost);
     }
 
