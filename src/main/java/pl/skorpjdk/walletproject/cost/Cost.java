@@ -18,7 +18,6 @@ public class Cost {
     private String description;
     private Instant dateOfPay;
     private double cost;
-    private String photos;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinTable(name = "person_cost",
             joinColumns = @JoinColumn(name = "cost_id", referencedColumnName = "id"),
